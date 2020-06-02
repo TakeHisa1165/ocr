@@ -1,10 +1,21 @@
-import numpy as np 
-import matplotlib.pyplot as plt 
+"""
+matplotlib で画像を範囲指定し、
+拡大表示後に保存
+"""
+
+
+import numpy as np
+import matplotlib.pyplot as plt
 from PIL import Image
 import crop_by_pil
 
 
 class CropImage:
+    """
+    matplotlibで画像を拡大後に保存
+    保存は全域を保存し、その後拡大部分を
+    別モジュールで切り取り
+    """
     def __init__(self, image_path, select_lang, window):
         # 画像を開く
         global DragFlag
@@ -18,41 +29,41 @@ class CropImage:
         self.img = np.asarray(self.img)
 
         # 初期値
-        x1  = 0 
-        y1  = 0
-        x2  = 50
-        y2  = 50
+        x1 = 0
+        y1 = 0
+        x2 = 50
+        y2 = 50
 
         # ドラッグしているかのフラグ
         DragFlag = False
 
         # ソート
-        ix1, ix2 = sorted([x1,x2])
-        iy1, iy2 = sorted([y1,y2])
+        ix1, ix2 = sorted([x1, x2])
+        iy1, iy2 = sorted([y1, y2])
 
         # 画像の一部を抜き出す
-        cimg = self.img[iy1:iy2,ix1:ix2,:]
+        cimg = self.img[iy1:iy2, ix1:ix2, :]
 
         # plot
         plt.close('all')
-        plt.figure(figsize=(10,8))
+        plt.figure(figsize=(10, 8))
 
         # subplot 1
-        plt.subplot(1,2,1)
+        plt.subplot(1, 2, 1)
         plt.tight_layout()
 
         # 画像を描画
         im1 = plt.imshow(self.img, cmap='gray')
 
         # 四角形を描画
-        Rect = [ [ [x1,x2], [y1,y1] ],
-                 [ [x2,x2], [y1,y2] ],
-                 [ [x1,x2], [y2,y2] ],
-                 [ [x1,x1], [y1,y2] ] ]
+        Rect = [[[x1, x2], [y1, y1]],
+                [[x2, x2], [y1, y2]],
+                [[x1, x2], [y2, y2]],
+                [[x1, x1], [y1, y2]]]
 
         self.lns = []
         for rect in Rect:
-            ln, = plt.plot(rect[0],rect[1],color='r',lw=2)
+            ln, = plt.plot(rect[0], rect[1], color='r', lw=2)
             self.lns.append(ln)
 
         # 軸を消す
@@ -64,7 +75,7 @@ class CropImage:
         plt.tight_layout()
 
 
-        # カラーマップの範囲を合わせる 
+        # カラーマップの範囲を合わせる
         plt.clim(im1.get_clim())
 
         # 軸を消す
@@ -76,7 +87,6 @@ class CropImage:
         plt.connect('button_release_event', self.Release)
 
         plt.show()
-        
 
 
 # 押した時
@@ -84,7 +94,7 @@ class CropImage:
         global x1,y1,DragFlag
         # 値がNoneなら終了
         if (event.xdata is None) or (event.ydata is None):
-            return 
+            return
 
         # 丸める
         cx = int(round(event.xdata))
@@ -106,7 +116,7 @@ class CropImage:
 
         # 値がNoneなら終了
         if (event.xdata is None) or (event.ydata is None):
-            return 
+            return
 
         # 丸める
         cx = int(round(event.xdata))
@@ -142,13 +152,12 @@ class CropImage:
 
     # 四角形を描く関数
     def DrawRect(self, x1, x2, y1, y2):
-        Rect = [ [ [x1,x2], [y1,y1] ],
-                 [ [x2,x2], [y1,y2] ],
-                 [ [x1,x2], [y2,y2] ],
-                 [ [x1,x1], [y1,y2] ] ]
+        Rect = [[[x1, x2], [y1, y1]],
+                [[x2, x2], [y1, y2]],
+                [[x1, x2], [y2, y2]],
+                [[x1, x1], [y1, y2]]]
         for i, rect in enumerate(Rect):
-            self.lns[i].set_data(rect[0],rect[1])
+            self.lns[i].set_data(rect[0], rect[1])
 
 if __name__ == "__main__":
-    CropImage(r"C:\Users\odyss\Downloads\test.png")
-
+    pass

@@ -50,8 +50,7 @@ class Image_to_Text:
             window.refresh()
 
         for path in image_path_list:
-            pass
-            # os.remove(path)
+            os.remove(path)
         sg.popup('完了しました')
         sys.exit()
 
